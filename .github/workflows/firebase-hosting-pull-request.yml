@@ -14,7 +14,9 @@ jobs:
           touch .env
           echo API_ENDPOINT=${{ secrets.API_ENDPOINT }} >> .env
           cat .env
-      - run: npm run deploy
+      - uses: borales/actions-yarn@v3.0.0
+        with:
+          cmd: deploy
       - uses: FirebaseExtended/action-hosting-deploy@v0
         with:
           repoToken: '${{ secrets.GITHUB_TOKEN }}'
