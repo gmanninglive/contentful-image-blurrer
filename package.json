@@ -7,7 +7,7 @@
     "@babel/plugin-transform-runtime": "7.12.1",
     "@babel/preset-env": "7.12.1",
     "@babel/preset-react": "7.12.1",
-    "@contentful/contentful-extension-scripts": "0.21.0",
+    "@contentful/contentful-extension-scripts": "^0.21.0",
     "@contentful/eslint-config-extension": "0.4.3",
     "@testing-library/react": "11.1.1",
     "@types/jest": "26.0.15",
@@ -33,8 +33,8 @@
   },
   "dependencies": {
     "@contentful/app-sdk": "^4.12.1",
-    "@contentful/forma-36-fcss": "^0.0.35",
     "@contentful/f36-components": "4.20.6",
+    "@contentful/forma-36-fcss": "^0.0.35",
     "@contentful/forma-36-tokens": "^0.11.2",
     "@contentful/react-apps-toolkit": "^1.2.7",
     "@google-cloud/functions-framework": "^3.1.2",
