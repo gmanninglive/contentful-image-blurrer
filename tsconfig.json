@@ -9,5 +9,6 @@
     "esModuleInterop": true,
     "lib": ["dom", "es2015"],
     "resolveJsonModule": true
-  }
+  },
+  "exclude": ["node_modules"]
 }
