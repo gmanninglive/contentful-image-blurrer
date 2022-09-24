@@ -6,8 +6,8 @@ interface AppProps {
   sdk: FieldExtensionSDK;
 }
 
-const getBlurData = async (imageURL: string) => {
-  const endpoint = `${process.env.API_ENDPOINT}?imageURL=${imageURL}`;
+const getBlurData = async (base = process.env.API_ENDPOINT, imageURL: string) => {
+  const endpoint = `${base}?imageURL=${imageURL}`;
   const res = await fetch(endpoint);
   return await res.json();
 };
@@ -20,6 +20,9 @@ const getImageURL = (asset: any): string => {
 };
 
 const App: React.FC<AppProps> = ({ sdk }) => {
+  //@ts-ignore
+  const apiBase = sdk.parameters?.instance?.apiEndpoint;
+
   const [state, setState] = useState({
     value: sdk.field.getValue() || {},
   });
@@ -34,7 +37,7 @@ const App: React.FC<AppProps> = ({ sdk }) => {
 
     if (state?.value?.img?.src === imageURL) return;
 
-    const blurData = await getBlurData(imageURL);
+    const blurData = await getBlurData(apiBase, imageURL);
 
     if (blurData) {
       setState({ value });
