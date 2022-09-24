@@ -1,0 +1,8 @@
+{
+  "id": "contentful-image-blurrer",
+  "name": "contentful-image-blurrer",
+  "srcdoc": "./build/index.html",
+  "fieldTypes": [
+    "Text"
+  ]
+}
