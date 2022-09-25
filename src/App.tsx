@@ -7,11 +7,11 @@ interface AppProps {
 }
 
 const App: React.FC<AppProps> = ({ sdk }) => {
-  const apiBase = sdk.parameters?.instance?.apiEndpoint || process.env.API_ENDPOINT;
-  const imageFieldID = sdk.parameters.instance?.imageFieldID || 'image';
+  const apiBase: string = sdk.parameters?.instance?.apiEndpoint || process.env.API_ENDPOINT;
+  const imageFieldID: string = sdk.parameters.instance?.imageFieldID || 'image';
 
   const [state, setState] = useState({
-    value: sdk.field.getValue() || {},
+    value: sdk.field.getValue(),
   });
 
   const getBlurData = async (imageURL: string) => {
@@ -30,11 +30,14 @@ const App: React.FC<AppProps> = ({ sdk }) => {
   const onImageChanged = async (value: Link) => {
     const imageId: string | undefined = value?.sys?.id;
     if (!imageId) {
-      return await sdk.field.setValue({});
+      return await sdk.field.removeValue();
     }
     const asset = await sdk.space.getAsset(imageId);
     const imageURL = getImageURL(asset);
 
+    // This function is triggered on mount we check if the image url
+    // is different to the image url stored in the blur data
+    // To avoid unnecessary api calls
     if (state?.value?.img?.src === imageURL) return;
 
     const blurData = await getBlurData(imageURL);
@@ -63,7 +66,7 @@ const App: React.FC<AppProps> = ({ sdk }) => {
     };
   }, []);
 
-  return <div>{JSON.stringify(state.value, null, 2)}</div>;
+  return <div>{state.value && JSON.stringify(state.value, null, 2)}</div>;
 };
 
 export default App;

@@ -1,16 +1,16 @@
 /* eslint-disable @typescript-eslint/no-explicit-any */
 
 import * as React from 'react';
-import { FieldExtensionSDK } from 'contentful-ui-extensions-sdk';
-import { App } from './index';
+import { FieldExtensionSDK } from '@contentful/app-sdk';
+import App from './App';
 import { render, fireEvent, cleanup, configure } from '@testing-library/react';
 
 configure({
-  testIdAttribute: 'data-test-id'
+  testIdAttribute: 'data-test-id',
 });
 
 function renderComponent(sdk: FieldExtensionSDK) {
-  return render(<App sdk={sdk} />);
+  return render(<App sdk={sdk as FieldExtensionSDK} />);
 }
 
 const sdk: any = {
@@ -18,11 +18,11 @@ const sdk: any = {
     getValue: jest.fn(),
     onValueChanged: jest.fn(),
     setValue: jest.fn(),
-    removeValue: jest.fn()
+    removeValue: jest.fn(),
   },
   window: {
-    startAutoResizer: jest.fn()
-  }
+    startAutoResizer: jest.fn(),
+  },
 };
 
 describe('App', () => {
@@ -37,7 +37,6 @@ describe('App', () => {
     const { getByTestId } = renderComponent(sdk);
 
     expect(sdk.field.getValue).toHaveBeenCalled();
-    expect(sdk.field.onValueChanged).toHaveBeenCalled();
     expect((getByTestId('my-field') as HTMLInputElement).value).toEqual('initial-value');
   });
 
@@ -50,13 +49,13 @@ describe('App', () => {
     const { getByTestId } = renderComponent(sdk);
 
     fireEvent.change(getByTestId('my-field'), {
-      target: { value: 'new-value' }
+      target: { value: 'new-value' },
     });
 
     expect(sdk.field.setValue).toHaveBeenCalledWith('new-value');
 
     fireEvent.change(getByTestId('my-field'), {
-      target: { value: '' }
+      target: { value: '' },
     });
 
     expect(sdk.field.setValue).toHaveBeenCalledTimes(1);
