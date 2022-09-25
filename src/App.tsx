@@ -8,14 +8,14 @@ interface AppProps {
 
 const App: React.FC<AppProps> = ({ sdk }) => {
   const apiBase: string = sdk.parameters?.instance?.apiEndpoint || process.env.API_ENDPOINT;
-  const imageFieldID: string = sdk.parameters.instance?.imageFieldID || 'image';
+  const imageFieldID: string = sdk.parameters?.instance?.imageFieldID || 'image';
 
   const [state, setState] = useState({
     value: sdk.field.getValue(),
   });
 
   const getBlurData = async (imageURL: string) => {
-    const endpoint = `${apiBase}?imageURL=${imageURL}`;
+    const endpoint = `${apiBase}?imageURL=${imageURL}?w=250`;
     const res = await fetch(endpoint);
     return await res.json();
   };
@@ -66,7 +66,11 @@ const App: React.FC<AppProps> = ({ sdk }) => {
     };
   }, []);
 
-  return <div>{state.value && JSON.stringify(state.value, null, 2)}</div>;
+  return (
+    <>
+      {state.value && <div data-test-id="blurDataField">JSON.stringify(state.value, null, 2)</div>}
+    </>
+  );
 };
 
 export default App;
