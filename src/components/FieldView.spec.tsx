@@ -2,22 +2,15 @@
 
 import * as React from 'react';
 import { FieldExtensionSDK } from '@contentful/app-sdk';
-import App from './App';
-import {
-  render,
-  fireEvent,
-  cleanup,
-  configure,
-  getByLabelText,
-  screen,
-} from '@testing-library/react';
+import FieldView from './FieldView';
+import { render, cleanup, configure, screen } from '@testing-library/react';
 
 configure({
   testIdAttribute: 'data-test-id',
 });
 
 function renderComponent(sdk: FieldExtensionSDK) {
-  return render(<App sdk={sdk as FieldExtensionSDK} />);
+  return render(<FieldView sdk={sdk as FieldExtensionSDK} />);
 }
 
 const sdk: any = {
@@ -42,7 +35,7 @@ const sdk: any = {
   },
 };
 
-describe('App', () => {
+describe('FieldView', () => {
   beforeEach(() => {
     jest.clearAllMocks();
   });
@@ -60,25 +53,8 @@ describe('App', () => {
     expect(screen.getByTestId('blurDataField')).toBeVisible();
   });
 
-  // it('should call startAutoResizer', () => {
-  //   renderComponent(sdk);
-  //   expect(sdk.window.startAutoResizer).toHaveBeenCalled();
-  // });
-
-  // it('should call setValue on every change in input and removeValue when input gets empty', () => {
-  //   const { getByTestId } = renderComponent(sdk);
-
-  //   fireEvent.change(getByTestId('my-field'), {
-  //     target: { value: 'new-value' },
-  //   });
-
-  //   expect(sdk.field.setValue).toHaveBeenCalledWith('new-value');
-
-  //   fireEvent.change(getByTestId('my-field'), {
-  //     target: { value: '' },
-  //   });
-
-  //   expect(sdk.field.setValue).toHaveBeenCalledTimes(1);
-  //   expect(sdk.field.removeValue).toHaveBeenCalledTimes(1);
-  // });
+  it('should call startAutoResizer', () => {
+    renderComponent(sdk);
+    expect(sdk.window.startAutoResizer).toHaveBeenCalled();
+  });
 });
