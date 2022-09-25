@@ -15,7 +15,10 @@ const FieldView: React.FC<FieldViewProps> = ({ sdk }) => {
   });
 
   const getBlurData = async (imageURL: string) => {
-    const endpoint = `${apiBase}?imageURL=${imageURL}`;
+    // Set image width to 250px to keep blur data generation function fast
+    // On large images the process can exceed firebase function 256mb limit and fail with 500 error
+    // This has little to no affect on the quality of the output
+    const endpoint = `${apiBase}?imageURL=${imageURL}?w=250`;
     const res = await fetch(endpoint);
     return await res.json();
   };
@@ -35,11 +38,11 @@ const FieldView: React.FC<FieldViewProps> = ({ sdk }) => {
     const asset = await sdk.space.getAsset(imageId);
     const imageURL = getImageURL(asset);
 
-    // This function is triggered on mount we check if the image url
-    // is different to the image url stored in the blur data
+    // This function is triggered on mount.
+    // We check if the contentful image url is different to the blur data url
     // To avoid unnecessary api calls
     if (state?.value?.img?.src.includes(imageURL)) return;
-
+    console.log('triggered');
     const blurData = await getBlurData(imageURL);
 
     if (blurData) {
