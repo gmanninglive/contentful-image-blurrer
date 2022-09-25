@@ -30,7 +30,6 @@ describe('generateBlurData', () => {
     await generateBlurData(request, response);
     const data = await response._getJSONData();
 
-    console.log(response);
     expect(response.statusCode).toEqual(200);
     expect('img' in data).toBe(true);
     expect('css' in data).toBe(true);
