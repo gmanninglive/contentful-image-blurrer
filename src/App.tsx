@@ -1,31 +1,31 @@
 import React, { useEffect, useState } from 'react';
-import { FieldExtensionSDK, Link } from 'contentful-ui-extensions-sdk';
+import { FieldExtensionSDK, Link } from '@contentful/app-sdk';
 import './index.css';
 
 interface AppProps {
   sdk: FieldExtensionSDK;
 }
 
-const getBlurData = async (base = process.env.API_ENDPOINT, imageURL: string) => {
-  const endpoint = `${base}?imageURL=${imageURL}`;
-  const res = await fetch(endpoint);
-  return await res.json();
-};
-
-const getImageURL = (asset: any): string => {
-  const file = asset.fields.file;
-  const firstLocale = Object.keys(file)[0];
-
-  return 'https:' + file[firstLocale].url;
-};
-
 const App: React.FC<AppProps> = ({ sdk }) => {
-  //@ts-ignore
-  const apiBase = sdk.parameters?.instance?.apiEndpoint;
+  const apiBase = sdk.parameters?.instance?.apiEndpoint || process.env.API_ENDPOINT;
+  const imageFieldID = sdk.parameters.instance?.imageFieldID || 'image';
 
   const [state, setState] = useState({
     value: sdk.field.getValue() || {},
   });
+
+  const getBlurData = async (imageURL: string) => {
+    const endpoint = `${apiBase}?imageURL=${imageURL}`;
+    const res = await fetch(endpoint);
+    return await res.json();
+  };
+
+  const getImageURL = (asset: any): string => {
+    const file = asset.fields.file;
+    const firstLocale = Object.keys(file)[0];
+
+    return 'https:' + file[firstLocale].url;
+  };
 
   const onImageChanged = async (value: Link) => {
     const imageId: string | undefined = value?.sys?.id;
@@ -37,7 +37,7 @@ const App: React.FC<AppProps> = ({ sdk }) => {
 
     if (state?.value?.img?.src === imageURL) return;
 
-    const blurData = await getBlurData(apiBase, imageURL);
+    const blurData = await getBlurData(imageURL);
 
     if (blurData) {
       setState({ value });
@@ -55,7 +55,7 @@ const App: React.FC<AppProps> = ({ sdk }) => {
 
   useEffect(() => {
     sdk.window.startAutoResizer();
-    const detachImageChangeHandler = sdk.entry.fields['image'].onValueChanged(onImageChanged);
+    const detachImageChangeHandler = sdk.entry.fields[imageFieldID].onValueChanged(onImageChanged);
     const detachExternalChangeHandler = sdk.field.onValueChanged(onExternalChange);
     return () => {
       detachExternalChangeHandler();
