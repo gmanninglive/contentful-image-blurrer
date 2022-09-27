@@ -53,17 +53,14 @@ export default class AppView extends Component<AppViewProps, AppViewState> {
 
   async onConfigure() {
     const sdk = this.props.sdk;
-    const { isInstalled, apiBase } = this.state;
+    const { apiBase } = this.state;
     const currentState = await sdk.app.getCurrentState();
-    if (isInstalled) {
-      sdk.notifier.success('The app is already fully configured.');
-      return false;
-    }
 
     if (!apiBase) {
       sdk.notifier.success('Please specify the api base endpoint parameter');
       return false;
     }
+
     return {
       parameters: { apiBase },
       targetState: {
