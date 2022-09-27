@@ -9,7 +9,7 @@ interface FieldViewProps {
 const FieldView: React.FC<FieldViewProps> = ({ sdk }) => {
   const apiBase: string = sdk.parameters?.installation?.apiEndpoint || process.env.API_ENDPOINT;
   const imageFieldID: string = sdk.parameters?.instance?.imageFieldID || 'image';
-
+  console.log('Parameters: ', sdk.parameters);
   const [state, setState] = useState({
     value: sdk.field.getValue(),
   });
@@ -42,11 +42,9 @@ const FieldView: React.FC<FieldViewProps> = ({ sdk }) => {
     // We check if the contentful image url is different to the blur data url
     // To avoid unnecessary api calls
     if (state?.value?.img?.src.includes(imageURL)) return;
-    console.log('triggered');
     const blurData = await getBlurData(imageURL);
 
     if (blurData) {
-      setState({ value });
       if (value) {
         await sdk.field.setValue(blurData);
       } else {
